@@ -1,0 +1,15 @@
+{
+    "semi": true,
+    "tabWidth": 4,
+    "useTabs": false,
+    "printWidth": 100,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "trailingComma": "all",
+    "arrowParens": "always",
+    "proseWrap": "preserve",
+    "quoteProps": "as-needed",
+    "trailingFunctionCommas": "all",
+    "spaceBeforeFunctionParen": true,
+    "functionCallArgumentNewline": "consistent"
+  }
