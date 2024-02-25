@@ -1,38 +1,45 @@
-import { Client, GatewayIntentBits, IntentsBitField, Partials } from 'discord.js';
+import { Client, GatewayIntentBits, IntentsBitField, Interaction, Partials } from 'discord.js';
 import { config } from 'dotenv';
-// import { onReady } from './listeners';
+// import { onMessageUpdate, onInteractionCreate, onMessageCreate } from './listeners';
+import { onReady } from './listeners';
 import { TOKEN } from './config';
 import dbconfig from './config';
+import { Message } from 'discord.js';
 config();
 
+const onMessageCreate = {
+    execute: (client: Client<boolean>, message: Message) => {
+        // Your code here
+    }
+};
+
 const client = new Client({
-    intents: ['Guilds', 'GuildMessages', 'GuildMembers', 'MessageContent', 'DirectMessages', 'GuildMessageReactions', 'DirectMessageTyping', 'DirectMessageReactions'],
-    partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User, Partials.GuildMember, Partials.ThreadMember],
+        intents: ['Guilds', 'GuildMessages', 'GuildMembers', 'MessageContent', 'DirectMessages', 'GuildMessageReactions', 'DirectMessageTyping', 'DirectMessageReactions'],
+        partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User, Partials.GuildMember, Partials.ThreadMember],
 });
 
-onReady(client);
-onMessageCreate(client);
-
-function onReady(client: Client<boolean>): Promise<void> {
-    console.log(`Logged in as ${client.user?.tag}!`);
-    
+const onMessageUpdate = (client: Client<boolean>, message: Message) => {
     // Your code here
-    return Promise.resolve();
-}
+};
 
-function onMessageCreate(client: Client<boolean>): Promise<void> {
-    console.log('Reading Messages!');
+const onInteractionCreate = {
+    execute: (client: Client<boolean>, interaction: Interaction) => {
+        // Your code here
+    }
+};
 
-    // Your code here
-    return Promise.resolve();
-}
+client.once('ready', () => {
+    onReady.execute(client);
+});
 
-function onMessageUpdate(client: Client<boolean>): Promise<void> {
-    console.log('Updating Messages!');
+client.on('messageCreate', (message) => {
+    onMessageCreate.execute(client, message);
+    onMessageUpdate(client, message);
+});
 
-    // Your code here
-    return Promise.resolve();
-}
+client.on('interactionCreate', (interaction) => {
+    onInteractionCreate.execute(client, interaction);
+})
 
 console.log(dbconfig);
 client.login(TOKEN);

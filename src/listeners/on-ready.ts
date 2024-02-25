@@ -5,3 +5,5 @@ export const onReady = {
         console.log(`Logged in as ${client.user?.tag}!`);
     },
 }
+
+export default onReady;

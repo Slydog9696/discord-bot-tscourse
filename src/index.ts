@@ -1,26 +1,28 @@
 // import node from 'node';
 // import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const express = require("express");
-const fileUpload = require("express-fileupload");
-const pdfParse = require("pdf-parse");
-const cors = require("cors");
-const path = require("path");
-const fs = require("fs");
+import express from 'express';
+import { createRequire } from 'node:module';
+import multer from 'multer';
+const customRequire = createRequire(__filename);
+// const express = customRequire("express");
+const fileUpload = customRequire("express-fileupload");
+const pdfParse = customRequire("pdf-parse");
+const cors = customRequire("cors");
+const path = customRequire("path");
+const fs = customRequire("fs");
 const app = express();
 const port = 3000;
-import express from 'express';
 
-const multer = require('multer');
+
 const upload = multer({ dest: 'uploads/' });
 
-app.post("/extract-text", (req: express.Request, res: express.Response) => {
-    if (!req.files && !req.files.pdfFile) {
+app.post("/extract-text", upload.single('pdfFile'), (req: express.Request, res: express.Response) => {
+    if (!req.file) {
         res.status(400);
         res.end();
     }
 
-    pdfParse(req.files.pdfFile).then((result: any) => {
+    pdfParse(req.file?.path).then((result: any) => {
         res.send(result.text);
     });
 });
